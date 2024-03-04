@@ -1,0 +1,36 @@
+import 'package:mstoo/user/core/core_export.dart';
+import 'package:mstoo/user/feature/notification/repository/notification_repo.dart';
+
+
+class ServiceRequestBookingRepo{
+  final SharedPreferences sharedPreferences;
+  final ApiClient apiClient;
+
+  ServiceRequestBookingRepo({required this.sharedPreferences,required this.apiClient});
+
+
+  Future<Response> placeBookingRequest({required String paymentMethod, required String userId,
+    required String serviceAddressID,required String schedule,required String zoneId,required String note
+  }) async {
+    return await apiClient.postData(AppConstants.placeRequest, {
+      "payment_method": paymentMethod,
+      "user_id": userId,
+      "service_address_id": serviceAddressID,
+      "service_schedule": schedule,
+      "zone_id": zoneId,
+      "note": note,
+    });
+  }
+
+  Future<Response> getBookingList({required int offset, required String bookingStatus})async{
+    return await apiClient.getData("${AppConstants.bookingList}?limit=10&offset=$offset&booking_status=$bookingStatus");
+  }
+
+  Future<Response> getBookingRequest({required int offset, required String bookingStatus})async{
+    return await apiClient.getData("${AppConstants.bookingRequest}?limit=10&offset=$offset&booking_status=$bookingStatus");
+  }
+
+  Future<Response> getBookingDetails({required String bookingID})async{
+    return await apiClient.getData("${AppConstants.bookingDetails}/$bookingID");
+  }
+}
